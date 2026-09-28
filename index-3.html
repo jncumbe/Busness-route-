@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rota do Negócio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1e2a24; --paper:#f6f3ec; --card:#ffffff;
+    --accent:#b5652f; --line:#dcd5c4; --muted:#6a6459;
+    padding-top: env(safe-area-inset-top,0px);
+    padding-bottom: env(safe-area-inset-bottom,0px);
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eee8db; --paper:#181510; --card:#221e17;
+      --accent:#e08a4f; --line:#3a342a; --muted:#a39a89;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eee8db; --paper:#181510; --card:#221e17;
+    --accent:#e08a4f; --line:#3a342a; --muted:#a39a89;
+  }
+  html{scroll-padding-top: env(safe-area-inset-top,0px);}
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Source Sans 3',sans-serif; line-height:1.55;
+  }
+  h1,h2,h3,.brand{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+
+  header{border-bottom:1px solid var(--line); padding:18px 0;}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .brand{font-size:1.4rem; font-weight:600; letter-spacing:.2px;}
+  .brand span{color:var(--accent);}
+  nav{display:flex; gap:22px; font-size:.95rem;}
+  nav a{text-decoration:none; color:var(--muted);}
+  nav a:hover, nav a:focus-visible{color:var(--ink);}
+
+  .hero{padding:56px 0 40px; border-bottom:1px solid var(--line);}
+  .hero h1{font-size:clamp(2rem,5vw,3rem); font-weight:500; max-width:14ch; margin:0 0 14px; line-height:1.1;}
+  .hero p{max-width:56ch; color:var(--muted); font-size:1.08rem; margin:0;}
+
+  .ad-slot{
+    background:var(--card); border:1px dashed var(--line); border-radius:6px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:var(--muted); font-size:.85rem; padding:14px;
+  }
+  .ad-slot .tag{font-size:.7rem; letter-spacing:.06em; color:var(--muted); display:block; margin-bottom:4px;}
+  .ad-leaderboard{margin:28px auto; max-width:728px; min-height:90px;}
+  .ad-rect{min-height:250px;}
+  .ad-inline{margin:34px 0; min-height:120px;}
+
+  main{padding:36px 0 20px;}
+  .layout{display:grid; grid-template-columns:1fr 300px; gap:44px; align-items:start;}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr;} .layout aside{order:2;} }
+
+  .post-list{display:flex; flex-direction:column;}
+  .post{padding:26px 0; border-bottom:1px solid var(--line);}
+  .post:first-child{padding-top:0;}
+  .post .cat{color:var(--accent); font-size:.82rem; font-weight:600;}
+  .post h2{font-size:1.4rem; font-weight:600; margin:6px 0 8px; line-height:1.25;}
+  .post p{color:var(--muted); margin:0 0 10px; max-width:62ch;}
+  .post .meta{font-size:.82rem; color:var(--muted);}
+  .post h2 a{text-decoration:none;}
+  .post h2 a:hover{color:var(--accent);}
+
+  aside{display:flex; flex-direction:column; gap:26px; position:sticky; top:20px;}
+  .widget{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:20px;}
+  .widget h3{font-size:1rem; margin:0 0 14px;}
+  .widget ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .widget li a{text-decoration:none; font-size:.92rem; color:var(--ink); display:block;}
+  .widget li a:hover{color:var(--accent);}
+  .widget .desc{color:var(--muted); font-size:.85rem; margin-top:12px; line-height:1.5;}
+
+  .newsletter{background:var(--ink); color:var(--paper); border-radius:8px; padding:22px;}
+  .newsletter h3{margin:0 0 8px; color:var(--paper);}
+  .newsletter p{font-size:.88rem; opacity:.85; margin:0 0 14px;}
+  .newsletter form{display:flex; gap:8px;}
+  .newsletter input{flex:1; min-width:0; padding:9px 10px; border-radius:5px; border:1px solid transparent; font-size:.88rem;}
+  .newsletter button{background:var(--accent); color:#fff; border:none; padding:9px 14px; border-radius:5px; font-size:.88rem; font-weight:600; cursor:pointer;}
+
+  footer a{color:var(--muted); margin-left:14px;}
+  footer{border-top:1px solid var(--line); margin-top:40px; padding:24px 0; color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  [hidden]{display:none !important;}
+  .full{min-width:0;}
+  .full h1{font-size:clamp(1.8rem,4.5vw,2.4rem); font-weight:500; line-height:1.15; margin:0 0 8px;}
+  .full h2{font-size:1.3rem; font-weight:600; margin:30px 0 8px;}
+  .full p, .full li{max-width:65ch;}
+  .full ul{padding-left:20px;}
+  .full .meta{color:var(--muted); font-size:.9rem; margin:0 0 24px;}
+  .full p.note{background:var(--card); border-left:3px solid var(--accent); padding:12px 16px; border-radius:4px; color:var(--muted); font-size:.92rem;}
+  .full a{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="index.html" style="text-decoration:none;color:inherit;">Rota do <span>Negócio</span></a>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="hero">
+  <div class="wrap">
+    <h1>Ideias práticas para quem constrói um negócio em Moçambique.</h1>
+    <p>Análises, guias e casos reais sobre gestão, finanças e crescimento — escritos para pequenos e médios empresários.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="ad-slot ad-leaderboard"><div><span class="tag">PUBLICIDADE</span>728 × 90</div></div>
+</div>
+
+<main class="wrap">
+  <div class="layout">
+    <section class="post-list" id="lista">
+      <article class="post">
+        <span class="cat">Gestão</span>
+        <h2><a href="#preco-certo">Como calcular o preço certo do teu produto sem perder margem</a></h2>
+        <p>Muitos negócios pequenos fixam preços "a olho". Aqui está um método simples para cobrir custos e ainda gerar lucro real, com exemplo prático em meticais.</p>
+        <span class="meta">6 min de leitura · Gestão</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Finanças</span>
+        <h2><a href="#contas-pessoais-negocio">Separar as contas pessoais das contas do negócio: porque é que isto decide tudo</a></h2>
+        <p>Misturar dinheiro pessoal e empresarial é o erro mais comum em negócios familiares. Vê como organizar isto em três passos simples.</p>
+        <span class="meta">5 min de leitura · Finanças</span>
+      </article>
+
+      <div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio nativo</div></div>
+
+      <article class="post">
+        <span class="cat">Mercado</span>
+        <h2><a href="#fornecedores-locais-importacao">Fornecedores locais vs. importação: quando cada opção compensa</a></h2>
+        <p>Nem sempre importar é mais barato. Comparamos custos escondidos — transporte, alfândega, prazos — com o que ganhas ao comprar no mercado local.</p>
+        <span class="meta">6 min de leitura · Mercado</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Gestão</span>
+        <h2><a href="#contratar-cedo">O erro de contratar cedo demais (e como saber quando estás pronto)</a></h2>
+        <p>Contratar antes da hora afunda o fluxo de caixa de muitos negócios em crescimento. Um guia para decidir com números, não com pressa.</p>
+        <span class="meta">6 min de leitura · Gestão</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Finanças</span>
+        <h2><a href="#credito-bancario-pme">Crédito bancário para pequenas empresas: o que os bancos realmente pedem</a></h2>
+        <p>Um levantamento dos requisitos mais comuns dos bancos moçambicanos para crédito a PME, e como preparar o teu dossiê antes de pedir.</p>
+        <span class="meta">7 min de leitura · Finanças</span>
+      </article>
+    </section>
+
+    <div id="artigos" style="display:contents">
+<article class="full" id="preco-certo" hidden>
+<h1>Como calcular o preço certo do teu produto sem perder margem</h1>
+<p class="meta"><strong>Categoria:</strong> Gestão · <strong>Leitura:</strong> 6 min</p>
+<p>Muitos pequenos negócios fixam preços "a olho": olham para o que o vizinho cobra e põem um valor parecido. O problema é que o vizinho pode ter custos diferentes dos teus, e o preço que lhe dá lucro pode dar-te prejuízo. Um bom preço nasce dos teus custos, não dos custos dos outros.</p>
+<h2>Passo 1: descobre o custo variável por unidade</h2>
+<p>São os custos que aparecem cada vez que produzes ou compras uma unidade: ingredientes ou matéria-prima, embalagem, transporte, energia ou gás usados naquela unidade. Soma tudo e divide pelo número de unidades.</p>
+<h2>Passo 2: reparte os custos fixos</h2>
+<p>Renda, salários, internet, licenças e transporte mensal não mudam com cada venda, mas têm de ser pagos. Soma-os e divide pelo número de unidades que esperas vender num mês. Se és optimista demais nesta estimativa, o preço fica baixo demais.</p>
+<h2>Passo 3: define a margem que queres</h2>
+<p>A margem é a percentagem do preço que fica como lucro. Para a calcular a partir do custo, usa esta fórmula:</p>
+<p><strong>Preço = custo total ÷ (1 − margem desejada)</strong></p>
+<h2>Exemplo prático</h2>
+<p>Imagina que vendes bolos por encomenda:</p>
+<ul><li>Ingredientes: 250 MT</li><li>Gás e embalagem: 50 MT</li><li><strong>Custo variável: 300 MT por bolo</strong></li><li>Custos fixos: 6.000 MT por mês, com 60 bolos vendidos, dão 100 MT por bolo</li><li><strong>Custo total: 400 MT</strong></li></ul>
+<p>Se queres 30% de margem: 400 ÷ 0,70 = <strong>cerca de 570 MT</strong>.</p>
+<p>Repara que somar 30% ao custo (400 + 30% = 520 MT) daria um preço mais baixo e uma margem real de apenas 23%. É um erro muito comum.</p>
+<h2>Passo 4: compara com o mercado</h2>
+<p>Só agora olhas para os concorrentes. Se o teu preço está muito acima, tens duas opções: baixar custos ou justificar o preço com mais valor (qualidade, entrega, atendimento). Se está abaixo, podes ter espaço para subir. O que não deves fazer é baixar o preço abaixo do cálculo só para vender mais, porque vender muito com prejuízo só aumenta o buraco.</p>
+<h2>Conclusão</h2>
+<p>Rever os preços duas vezes por ano é uma boa prática, porque os custos mudam. Guarda esta folha de cálculo e actualiza-a sempre que o fornecedor subir os preços.</p>
+<div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio</div></div>
+<p><a href="#">← Voltar à lista de artigos</a></p>
+</article>
+
+<article class="full" id="contas-pessoais-negocio" hidden>
+<h1>Separar as contas pessoais das contas do negócio: porque é que isto decide tudo</h1>
+<p class="meta"><strong>Categoria:</strong> Finanças · <strong>Leitura:</strong> 5 min</p>
+<p>Nos negócios familiares, o dinheiro da loja paga a escola dos filhos e o dinheiro de casa paga o stock. Enquanto tudo vai bem, ninguém repara. Quando as coisas apertam, ninguém sabe se o negócio dá lucro ou se está a viver do salário de alguém.</p>
+<h2>Porque é que a mistura é perigosa</h2>
+<ul><li>Não consegues saber se o negócio é rentável.</li><li>Não consegues provar rendimentos ao banco quando precisas de crédito.</li><li>Gastos pessoais "escondem-se" nas despesas do negócio e vice-versa.</li><li>Ao fim do mês, o dinheiro desaparece sem explicação.</li></ul>
+<h2>Três passos simples para separar</h2>
+<p><strong>1. Abre uma conta só para o negócio.</strong> Se ainda não podes abrir uma conta empresarial, abre pelo menos uma conta separada e usa-a exclusivamente para o negócio. O mesmo vale para carteiras móveis como M-Pesa ou e-Mola: usa uma linha para o negócio e outra para ti.</p>
+<p><strong>2. Paga-te um salário.</strong> Define um valor fixo mensal que tiras do negócio para a tua vida pessoal, e transfere-o sempre no mesmo dia. Tudo o que fica na conta do negócio pertence ao negócio. Se o negócio não aguenta esse salário, isso é uma informação valiosa sobre os preços ou os custos.</p>
+<p><strong>3. Regista tudo.</strong> Não precisas de um programa complicado. Um caderno ou uma folha de Excel com data, descrição, entrada e saída já resolve. O importante é registar todos os dias ou, no mínimo, todas as semanas.</p>
+<h2>O benefício escondido</h2>
+<p>Quando o teu negócio tem contas próprias e registos organizados, ganhas credibilidade. Bancos, fornecedores e potenciais sócios levam-te mais a sério, e tu passas a tomar decisões com números em vez de sensações.</p>
+<h2>Conclusão</h2>
+<p>Começa esta semana: abre a conta, define o teu salário e regista as primeiras despesas. Em três meses vais saber mais sobre o teu negócio do que em anos a misturar tudo.</p>
+<div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio</div></div>
+<p><a href="#">← Voltar à lista de artigos</a></p>
+</article>
+
+<article class="full" id="fornecedores-locais-importacao" hidden>
+<h1>Fornecedores locais vs. importação: quando cada opção compensa</h1>
+<p class="meta"><strong>Categoria:</strong> Mercado · <strong>Leitura:</strong> 6 min</p>
+<p>Importar parece sempre mais barato: o preço na origem é menor e a variedade é maior. Mas o preço da fábrica não é o preço que pagas. Antes de decidir, é preciso calcular o custo total do produto colocado no teu armazém.</p>
+<h2>Os custos escondidos da importação</h2>
+<ul><li><strong>Transporte e frete</strong>, que muitas vezes pesa mais do que se imagina em produtos volumosos.</li><li><strong>Despacho e direitos alfandegários</strong>, que variam conforme o produto.</li><li><strong>Câmbio</strong>: se o metical se desvaloriza entre a encomenda e o pagamento, o custo sobe.</li><li><strong>Prazos longos</strong>: semanas ou meses até a mercadoria chegar, com dinheiro parado.</li><li><strong>Quantidades mínimas</strong>: muitos fornecedores exigem encomendas grandes, e o risco de ficar com stock parado é teu.</li><li><strong>Risco de qualidade</strong>: se a mercadoria vem defeituosa, reclamar à distância é difícil.</li></ul>
+<h2>As vantagens do fornecedor local</h2>
+<ul><li>Podes comprar em pequenas quantidades e repor rapidamente.</li><li>Vês e testas o produto antes de pagar.</li><li>Não tens risco cambial.</li><li>Podes negociar prazos de pagamento e construir uma relação de confiança.</li><li>Resolves problemas de qualidade com uma visita ou uma chamada.</li></ul>
+<h2>Como comparar de forma justa</h2>
+<p>Calcula o <strong>custo total por unidade</strong> nas duas opções:</p>
+<p><strong>Custo total = preço do produto + transporte + despacho e taxas + custo do dinheiro parado + perdas esperadas</strong></p>
+<p>Divide o resultado pelo número de unidades que realmente vais vender. Só depois compara.</p>
+<h2>Quando cada opção costuma compensar</h2>
+<p><strong>A importação tende a compensar</strong> quando vendes grandes volumes, o produto simplesmente não existe localmente, ou a diferença de preço é grande mesmo depois de somares todos os custos.</p>
+<p><strong>O fornecedor local tende a compensar</strong> quando estás a começar, o teu capital é limitado, o produto é perecível ou a procura é incerta.</p>
+<h2>Conclusão</h2>
+<p>Não existe resposta única. Faz as contas com números reais, pede orçamentos a pelo menos três fornecedores de cada tipo e, se possível, começa com uma encomenda pequena de teste antes de te comprometeres com grandes volumes.</p>
+<div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio</div></div>
+<p><a href="#">← Voltar à lista de artigos</a></p>
+</article>
+
+<article class="full" id="contratar-cedo" hidden>
+<h1>O erro de contratar cedo demais (e como saber quando estás pronto)</h1>
+<p class="meta"><strong>Categoria:</strong> Gestão · <strong>Leitura:</strong> 6 min</p>
+<p>Quando o negócio começa a crescer, a tentação é contratar logo alguém para ajudar. Mas um salário é um compromisso fixo, e as vendas não são fixas. Muitos negócios em crescimento fecham não por falta de clientes, mas por falta de caixa para pagar quem contrataram cedo demais.</p>
+<h2>Porque é que o salário pesa mais do que parece</h2>
+<p>O custo de um funcionário não é só o salário. Inclui as contribuições para a segurança social, eventuais subsídios, equipamento, formação e o tempo que gastas a gerir a pessoa. Na prática, custa sempre mais do que o valor combinado no contrato.</p>
+<h2>Sinais de que ainda não estás pronto</h2>
+<ul><li>As vendas oscilam muito de mês para mês.</li><li>Não tens reserva para pagar salários durante pelo menos três meses.</li><li>Não sabes descrever com clareza o que a pessoa vai fazer.</li><li>A contratação é uma reacção ao cansaço e não a um problema concreto.</li></ul>
+<h2>Sinais de que estás pronto</h2>
+<ul><li>Tens receitas regulares que cobrem confortavelmente o custo da nova pessoa.</li><li>Estás a perder vendas por falta de capacidade, e sabes quantas.</li><li>Existe uma tarefa concreta e repetitiva que te impede de fazer o que gera dinheiro.</li><li>Tens reserva de caixa para aguentar os primeiros meses.</li></ul>
+<h2>Alternativas antes de contratar</h2>
+<ul><li><strong>Trabalho por tarefa ou por comissão</strong>: pagas apenas pelo resultado.</li><li><strong>Meio período ou dias fixos</strong> na semana.</li><li><strong>Prestadores de serviços</strong> para contabilidade, design ou entregas.</li><li><strong>Automatizar</strong> o que puderes, com folhas de cálculo, agendamentos ou mensagens automáticas.</li></ul>
+<h2>Como decidir com números</h2>
+<p>Faz uma conta simples: quanto vai custar esta pessoa por mês, com todos os encargos, e quanto de receita nova ela vai gerar ou quanto tempo teu vai libertar? Se não consegues responder com razoável confiança, ainda é cedo.</p>
+<h2>Conclusão</h2>
+<p>Contratar é uma decisão de crescimento, não um alívio para o cansaço. Prepara a reserva, define a função com clareza e testa primeiro com formas flexíveis de trabalho.</p>
+<div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio</div></div>
+<p><a href="#">← Voltar à lista de artigos</a></p>
+</article>
+
+<article class="full" id="credito-bancario-pme" hidden>
+<h1>Crédito bancário para pequenas empresas: o que os bancos realmente pedem</h1>
+<p class="meta"><strong>Categoria:</strong> Finanças · <strong>Leitura:</strong> 7 min</p>
+<p>Muitos empreendedores desistem do crédito porque acham que "os bancos não emprestam a pequenos negócios". Na verdade, muitas recusas acontecem por falta de preparação: o dossiê chega incompleto ou o pedido não está bem explicado. Saber o que o banco quer ver aumenta muito as tuas hipóteses.</p>
+<p class="note"><strong>Nota importante:</strong> os requisitos variam de banco para banco e mudam ao longo do tempo. Antes de avançares, confirma a lista exacta directamente com o banco onde queres pedir o crédito.</p>
+<h2>O que os bancos costumam avaliar</h2>
+<p><strong>1. Situação legal do negócio.</strong> Normalmente pedem prova de que a empresa ou actividade está regularizada: NUIT, licença ou alvará, registo comercial e, quando aplicável, documentos dos sócios.</p>
+<p><strong>2. Movimento financeiro.</strong> O banco quer ver que o negócio tem receitas reais. Extractos bancários dos últimos meses ajudam muito, e é uma razão forte para teres a conta do negócio separada da pessoal.</p>
+<p><strong>3. Capacidade de pagamento.</strong> Não basta o negócio dar lucro no papel: tem de sobrar dinheiro para pagar a prestação. Faz a conta antes de pedir.</p>
+<p><strong>4. Plano de negócio ou justificação do crédito.</strong> Explica para que precisas do dinheiro (equipamento, stock, expansão), quanto precisas e como vais gerar receita com ele.</p>
+<p><strong>5. Garantias.</strong> É comum o banco pedir alguma forma de garantia, como um bem, um aval ou uma fiança. Pergunta quais são aceites e com que valor.</p>
+<p><strong>6. Histórico e reputação.</strong> Dívidas pendentes ou histórico de incumprimento pesam contra ti.</p>
+<h2>Como te preparares</h2>
+<ul><li>Organiza os documentos legais e mantém-nos actualizados.</li><li>Usa a conta do negócio de forma regular durante alguns meses antes de pedir.</li><li>Prepara uma previsão simples de receitas e despesas.</li><li>Define o montante mínimo de que realmente precisas, sem exagerar.</li><li>Compara as condições (taxa de juro, prazo, comissões) em mais do que um banco.</li></ul>
+<h2>Cuidado com o sobre-endividamento</h2>
+<p>Um crédito só faz sentido se o dinheiro for usado para gerar mais receita do que a prestação custa. Se o dinheiro serve para tapar buracos de gestão, o problema volta maior.</p>
+<h2>Conclusão</h2>
+<p>O banco não é um adversário: é um parceiro que precisa de confiar em ti. Com documentos em ordem, contas organizadas e um pedido claro, passas de "risco" a "cliente interessante".</p>
+<div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio</div></div>
+<p><a href="#">← Voltar à lista de artigos</a></p>
+</article>
+    </div>
+
+    <aside>
+      <div class="ad-slot ad-rect"><div><span class="tag">PUBLICIDADE</span>300 × 250</div></div>
+
+      <div class="widget">
+        <h3>Mais lidos</h3>
+        <ul>
+          <li><a href="#preco-certo">Como calcular o preço certo do teu produto</a></li>
+          <li><a href="#credito-bancario-pme">Crédito bancário para pequenas empresas</a></li>
+          <li><a href="#fornecedores-locais-importacao">Fornecedores locais vs. importação</a></li>
+        </ul>
+      </div>
+
+      <div class="newsletter">
+        <h3>Recebe os artigos por email</h3>
+        <p>Um resumo semanal, sem spam.</p>
+        <form onsubmit="event.preventDefault();">
+          <input type="email" placeholder="O teu email" required>
+          <button type="submit">Subscrever</button>
+        </form>
+      </div>
+
+      <div class="ad-slot ad-rect"><div><span class="tag">PUBLICIDADE</span>300 × 250</div></div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+    <span>© 2026 Rota do Negócio · Maputo, Moçambique</span>
+    <span><a href="sobre.html">Sobre</a> <a href="contacto.html">Contacto</a> <a href="privacidade.html">Privacidade</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var list=document.getElementById('lista'), hero=document.getElementById('hero');
+  var arts=document.querySelectorAll('article.full');
+  function show(){
+    var id=location.hash.slice(1), found=null;
+    arts.forEach(function(a){ var m=(a.id===id); a.hidden=!m; if(m) found=a; });
+    list.hidden=!!found; hero.hidden=!!found;
+    document.title = found ? found.querySelector('h1').textContent+' — Rota do Negócio' : 'Rota do Negócio';
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show); show();
+})();
+</script>
+</body>
+</html>
