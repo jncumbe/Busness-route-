@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rota do Negócio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1e2a24; --paper:#f6f3ec; --card:#ffffff;
+    --accent:#b5652f; --line:#dcd5c4; --muted:#6a6459;
+    padding-top: env(safe-area-inset-top,0px);
+    padding-bottom: env(safe-area-inset-bottom,0px);
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#eee8db; --paper:#181510; --card:#221e17;
+      --accent:#e08a4f; --line:#3a342a; --muted:#a39a89;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#eee8db; --paper:#181510; --card:#221e17;
+    --accent:#e08a4f; --line:#3a342a; --muted:#a39a89;
+  }
+  html{scroll-padding-top: env(safe-area-inset-top,0px);}
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Source Sans 3',sans-serif; line-height:1.55;
+  }
+  h1,h2,h3,.brand{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+
+  header{border-bottom:1px solid var(--line); padding:18px 0;}
+  header .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .brand{font-size:1.4rem; font-weight:600; letter-spacing:.2px;}
+  .brand span{color:var(--accent);}
+  nav{display:flex; gap:22px; font-size:.95rem;}
+  nav a{text-decoration:none; color:var(--muted);}
+  nav a:hover, nav a:focus-visible{color:var(--ink);}
+
+  .hero{padding:56px 0 40px; border-bottom:1px solid var(--line);}
+  .hero h1{font-size:clamp(2rem,5vw,3rem); font-weight:500; max-width:14ch; margin:0 0 14px; line-height:1.1;}
+  .hero p{max-width:56ch; color:var(--muted); font-size:1.08rem; margin:0;}
+
+  .ad-slot{
+    background:var(--card); border:1px dashed var(--line); border-radius:6px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:var(--muted); font-size:.85rem; padding:14px;
+  }
+  .ad-slot .tag{font-size:.7rem; letter-spacing:.06em; color:var(--muted); display:block; margin-bottom:4px;}
+  .ad-leaderboard{margin:28px auto; max-width:728px; min-height:90px;}
+  .ad-rect{min-height:250px;}
+  .ad-inline{margin:34px 0; min-height:120px;}
+
+  main{padding:36px 0 20px;}
+  .layout{display:grid; grid-template-columns:1fr 300px; gap:44px; align-items:start;}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr;} .layout aside{order:2;} }
+
+  .post-list{display:flex; flex-direction:column;}
+  .post{padding:26px 0; border-bottom:1px solid var(--line);}
+  .post:first-child{padding-top:0;}
+  .post .cat{color:var(--accent); font-size:.82rem; font-weight:600;}
+  .post h2{font-size:1.4rem; font-weight:600; margin:6px 0 8px; line-height:1.25;}
+  .post p{color:var(--muted); margin:0 0 10px; max-width:62ch;}
+  .post .meta{font-size:.82rem; color:var(--muted);}
+  .post h2 a{text-decoration:none;}
+  .post h2 a:hover{color:var(--accent);}
+
+  aside{display:flex; flex-direction:column; gap:26px; position:sticky; top:20px;}
+  .widget{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:20px;}
+  .widget h3{font-size:1rem; margin:0 0 14px;}
+  .widget ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .widget li a{text-decoration:none; font-size:.92rem; color:var(--ink); display:block;}
+  .widget li a:hover{color:var(--accent);}
+  .widget .desc{color:var(--muted); font-size:.85rem; margin-top:12px; line-height:1.5;}
+
+  .newsletter{background:var(--ink); color:var(--paper); border-radius:8px; padding:22px;}
+  .newsletter h3{margin:0 0 8px; color:var(--paper);}
+  .newsletter p{font-size:.88rem; opacity:.85; margin:0 0 14px;}
+  .newsletter form{display:flex; gap:8px;}
+  .newsletter input{flex:1; min-width:0; padding:9px 10px; border-radius:5px; border:1px solid transparent; font-size:.88rem;}
+  .newsletter button{background:var(--accent); color:#fff; border:none; padding:9px 14px; border-radius:5px; font-size:.88rem; font-weight:600; cursor:pointer;}
+
+  footer{border-top:1px solid var(--line); margin-top:40px; padding:24px 0; color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Rota do <span>Negócio</span></div>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Gestão</a>
+      <a href="#">Finanças</a>
+      <a href="#">Mercado</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Ideias práticas para quem constrói um negócio em Moçambique.</h1>
+    <p>Análises, guias e casos reais sobre gestão, finanças e crescimento — escritos para pequenos e médios empresários.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="ad-slot ad-leaderboard"><div><span class="tag">PUBLICIDADE</span>728 × 90</div></div>
+</div>
+
+<main class="wrap">
+  <div class="layout">
+    <section class="post-list">
+      <article class="post">
+        <span class="cat">Gestão</span>
+        <h2><a href="#">Como calcular o preço certo do teu produto sem perder margem</a></h2>
+        <p>Muitos negócios pequenos fixam preços "a olho". Aqui está um método simples para cobrir custos e ainda gerar lucro real, com exemplo prático em meticais.</p>
+        <span class="meta">12 min de leitura · Gestão</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Finanças</span>
+        <h2><a href="#">Separar as contas pessoais das contas do negócio: porque é que isto decide tudo</a></h2>
+        <p>Misturar dinheiro pessoal e empresarial é o erro mais comum em negócios familiares. Vê como organizar isto em três passos simples.</p>
+        <span class="meta">8 min de leitura · Finanças</span>
+      </article>
+
+      <div class="ad-slot ad-inline"><div><span class="tag">PUBLICIDADE</span>Anúncio nativo</div></div>
+
+      <article class="post">
+        <span class="cat">Mercado</span>
+        <h2><a href="#">Fornecedores locais vs. importação: quando cada opção compensa</a></h2>
+        <p>Nem sempre importar é mais barato. Comparamos custos escondidos — transporte, alfândega, prazos — com o que ganhas ao comprar no mercado local.</p>
+        <span class="meta">10 min de leitura · Mercado</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Gestão</span>
+        <h2><a href="#">O erro de contratar cedo demais (e como saber quando estás pronto)</a></h2>
+        <p>Contratar antes da hora afunda o fluxo de caixa de muitos negócios em crescimento. Um guia para decidir com números, não com pressa.</p>
+        <span class="meta">9 min de leitura · Gestão</span>
+      </article>
+
+      <article class="post">
+        <span class="cat">Finanças</span>
+        <h2><a href="#">Crédito bancário para pequenas empresas: o que os bancos realmente pedem</a></h2>
+        <p>Um levantamento dos requisitos mais comuns dos bancos moçambicanos para crédito a PME, e como preparar o teu dossiê antes de pedir.</p>
+        <span class="meta">11 min de leitura · Finanças</span>
+      </article>
+    </section>
+
+    <aside>
+      <div class="ad-slot ad-rect"><div><span class="tag">PUBLICIDADE</span>300 × 250</div></div>
+
+      <div class="widget">
+        <h3>Mais lidos</h3>
+        <ul>
+          <li><a href="#">Como calcular o preço certo do teu produto</a></li>
+          <li><a href="#">Crédito bancário para pequenas empresas</a></li>
+          <li><a href="#">Fornecedores locais vs. importação</a></li>
+        </ul>
+      </div>
+
+      <div class="newsletter">
+        <h3>Recebe os artigos por email</h3>
+        <p>Um resumo semanal, sem spam.</p>
+        <form onsubmit="event.preventDefault();">
+          <input type="email" placeholder="O teu email" required>
+          <button type="submit">Subscrever</button>
+        </form>
+      </div>
+
+      <div class="ad-slot ad-rect"><div><span class="tag">PUBLICIDADE</span>300 × 250</div></div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:10px;">
+    <span>© 2026 Rota do Negócio</span>
+    <span>Maputo, Moçambique</span>
+  </div>
+</footer>
+
+</body>
+</html>
